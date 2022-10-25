@@ -1,32 +1,29 @@
 import { useState, FC } from 'react';
 import Checkbox from '@mui/material/Checkbox';
+import { Row } from 'src/components';
 
 import styles from './Filters.module.scss';
 
 interface FiltersProps {
-  store?: {};
-  updateStore?: (val) => void;
+  // store?: {};
+  // updateStore?: (val) => void;
+  setFilterFns: (val) => void;
 }
-
-// OR
-
-//interface FiltersProps {
-//  selected?: {};
-//  updateSelected?: (val) => void;
-//}
-
-// OR store can be global
 
 const OPTIONS = [
   {
     title: 'Without posts',
+    filterFn: (row: Row) => row.posts === 0,
   },
   {
     title: 'More than 100 posts',
+    filterFn: (row: Row) => row.posts > 100,
   },
 ];
 
 export const Filters: FC<FiltersProps> = props => {
+  const { setFilterFns } = props;
+
   const [selectedFilter, setSelectedFilter] = useState<string[]>([]);
 
   const onChange = ({ title }) => {
@@ -41,6 +38,9 @@ export const Filters: FC<FiltersProps> = props => {
     }
 
     setSelectedFilter(updatedFilters);
+
+    const filterFns = OPTIONS.filter((o) => updatedFilters.includes(o.title)).map((o) => o.filterFn)
+    setFilterFns(filterFns);
   };
 
   return (
