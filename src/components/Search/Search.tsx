@@ -1,37 +1,28 @@
-import { useState, FC } from 'react';
+import { FC } from 'react';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import SearchIcon from '@mui/icons-material/Search';
+import { DispatchAction } from 'src/App';
 
 import styles from './Search.module.scss';
 
 interface SearchProps {
-  store?: {};
-  updateStore?: (val) => void;
+  searchTerm: string;
+  dispatch: (action: DispatchAction) => void;
 }
 
-// OR
-
-//interface SearchProps {
-//  selected?: {};
-//  updateSelected?: (val) => void;
-//}
-
-// OR store can be global
-
 export const Search: FC<SearchProps> = props => {
-  const [searchedValue, setSearchedValue] = useState('');
+  const { dispatch, searchTerm } = props;
 
   const onChange = value => {
-    console.log(value); // for debugging
-    setSearchedValue(value);
+    dispatch({type: 'setSearchTerm', payload: value})
   };
 
   return (
     <OutlinedInput
       className={styles.input}
       placeholder="Search by country/name/username"
-      value={searchedValue}
+      value={searchTerm}
       type="search"
       startAdornment={
         <InputAdornment position="start">
